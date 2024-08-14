@@ -2,11 +2,13 @@
 
 namespace Modules\FormBuilder\Admin;
 
+use App\Filament\Resources\TranslateResource\RelationManagers\TranslatableRelationManager;
 use App\Services\Schema;
 use App\Services\TableSchema;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -105,7 +107,7 @@ class FormBuilderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationGroup::make('Seo and translates', [TranslatableRelationManager::class,]),
         ];
     }
 
