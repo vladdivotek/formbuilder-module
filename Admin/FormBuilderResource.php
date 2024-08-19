@@ -5,6 +5,7 @@ namespace Modules\FormBuilder\Admin;
 use App\Filament\Resources\TranslateResource\RelationManagers\TranslatableRelationManager;
 use App\Services\Schema;
 use App\Services\TableSchema;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -43,42 +44,36 @@ class FormBuilderResource extends Resource
     {
         return $form
             ->schema([
-                Tabs::make('tabs')
-                    ->columnSpanFull()
+                Section::make(__('General'))
                     ->schema([
-                        Tabs\Tab::make('general')
-                            ->label(__('General'))
+                        Schema::getName(),
+                        Schema::getStatus(),
+                        Schema::getToggle('is_modal')
+                            ->label(__('Is modal')),
+                        TextInput::make('listener')
+                            ->label(__('Listener')),
+                    ]),
+                Section::make(__('Form'))
+                    ->schema([
+                        Schema::getRepeater('data')
                             ->schema([
-                                Schema::getName(),
-                                TextInput::make('listener')
-                                    ->label(__('Listener')),
-                                Schema::getToggle('is_modal')
-                                    ->label(__('Is modal')),
-                                Schema::getStatus()
-                            ]),
-                        Tabs\Tab::make('form')
-                            ->label(__('Form'))
-                            ->schema([
-                                Schema::getRepeater('data')
-                                    ->schema([
-                                        Schema::getSelect('type', FormBuilder::TYPES)
-                                            ->label(__('Type'))
-                                            ->required(),
-                                        TextInput::make('label')
-                                            ->label(__('Label'))
-                                            ->required(),
-                                        TextInput::make('placeholder')
-                                            ->label(__('Placeholder')),
-                                        Schema::getToggle('required')
-                                            ->label(__('Required')),
-                                    ])
-                                    ->formatStateUsing(function ($record) {
-                                        return $record->data ?? [];
-                                    }),
-                                TextInput::make('button')
-                                    ->label(__('Button text'))
+                                Schema::getSelect('type', FormBuilder::TYPES)
+                                    ->label(__('Type'))
+                                    ->required(),
+                                TextInput::make('label')
+                                    ->label(__('Label'))
+                                    ->required(),
+                                TextInput::make('placeholder')
+                                    ->label(__('Placeholder')),
+                                Schema::getToggle('required')
+                                    ->label(__('Required')),
                             ])
-                    ])
+                            ->formatStateUsing(function ($record) {
+                                return $record->data ?? [];
+                            }),
+                        TextInput::make('button')
+                            ->label(__('Button text'))
+                    ]),
             ]);
     }
 
